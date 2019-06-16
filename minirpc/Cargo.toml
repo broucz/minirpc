@@ -1,0 +1,17 @@
+[package]
+name = "minirpc"
+version = "0.1.0"
+authors = ["broucz <broucapierre@gmail.com>"]
+edition = "2018"
+description = "A minimalist RPC framework."
+documentation = "https://docs.rs/minirpc/"
+homepage = "https://github.com/broucz/minirpc"
+repository = "https://github.com/broucz/minirpc"
+keywords = ["rpc"]
+readme = "README.md"
+license = "MIT"
+
+[dependencies]
+serde = "1.0.92"
+serde_derive = "1.0.92"
+serde_json = "1.0.39"
