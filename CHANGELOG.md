@@ -21,4 +21,4 @@ _Note: Gaps between patch versions are faulty, broken or test releases._
 
 ### Feature
 
-- Initial release ([c465b0c](https://github.com/broucz/minirpc/commit/8ac1bd6)).
+- Initial release ([8ac1bd6](https://github.com/broucz/minirpc/commit/8ac1bd6)).
