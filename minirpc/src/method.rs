@@ -13,8 +13,8 @@ pub enum Method {
 impl fmt::Display for Method {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-           Method::String(string) => write!(f, "{}", string),
-       }
+            Method::String(string) => write!(f, "{}", string),
+        }
     }
 }
 
