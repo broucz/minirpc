@@ -1,9 +1,15 @@
+//! MINI-RPC Response Success.
+
 use crate::Id;
 use serde_json::Value;
 
+/// Response success.
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Success {
+    /// Correlation id.
     pub id: Id,
+
+    /// Result.
     pub result: Value,
 }
 

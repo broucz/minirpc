@@ -1,16 +1,20 @@
+//! MINI-RPC Request Method.
+
 use std::fmt;
 
+/// Request method.
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Method {
+    /// String method.
     String(String),
 }
 
 impl fmt::Display for Method {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-           Method::String(string) => write!(f, "{}", string),
-       }
+            Method::String(string) => write!(f, "{}", string),
+        }
     }
 }
 

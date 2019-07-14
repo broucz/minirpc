@@ -1,6 +1,10 @@
+//! MINI-RPC Id.
+
+/// Request id.
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Id {
+    /// Numeric id.
     Number(u64),
 }
 
