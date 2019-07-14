@@ -1,16 +1,26 @@
+//! MINI-RPC Response.
+
 use crate::{Failure, Success};
 
+/// Response payload.
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Payload {
+    /// Unsuccessful response.
     Failure(Failure),
+
+    /// Successful response.
     Success(Success),
 }
 
+/// Response.
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Response {
+    /// A batch of responses (payloads).
     Batch(Vec<Payload>),
+
+    /// A single response (payload).
     Single(Payload),
 }
 

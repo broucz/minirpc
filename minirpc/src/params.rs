@@ -1,9 +1,15 @@
+//! MINI-RPC Request Parameters.
+
 use serde_json::{Map, Value};
 
+/// Request parameters.
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Params {
+    /// Array of values.
     Array(Vec<Value>),
+
+    /// Map of values.
     Object(Map<String, Value>),
 }
 

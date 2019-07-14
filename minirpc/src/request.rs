@@ -1,16 +1,26 @@
+//! MINI-RPC Request.
+
 use crate::{Call, Notification};
 
+/// Request.
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Request {
+    /// A batch of requests (payloads).
     Batch(Vec<Payload>),
+
+    /// A single request (payload).
     Single(Payload),
 }
 
+/// Request payload.
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Payload {
+    /// Fire a notification.
     Notification(Notification),
+
+    /// Call a method.
     Call(Call),
 }
 

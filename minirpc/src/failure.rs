@@ -1,8 +1,14 @@
+//! MINI-RPC Response Failure.
+
 use crate::{Error, Id};
 
+/// Response failure.
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Failure {
+    /// Error.
     pub error: Error,
+
+    /// Correlation id.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<Id>,
 }

@@ -1,8 +1,12 @@
+//! MINI-RPC Request Method.
+
 use std::fmt;
 
+/// Request method.
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Method {
+    /// String method.
     String(String),
 }
 

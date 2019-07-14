@@ -1,14 +1,29 @@
+//! MINI-RPC Errors.
+
 use serde::de::{Deserialize, Deserializer};
 use serde::ser::{Serialize, Serializer};
 use std::fmt;
 
+/// Error code.
 #[derive(Debug, PartialEq)]
 pub enum Code {
+    /// Invalid JSON was received by the server.
+    /// An error occurred on the server while parsing the JSON text.
     ParseError,
+
+    /// The JSON sent is not a valid Request object.
     InvalidRequest,
+
+    /// The method does not exist / is not available.
     MethodNotFound,
+
+    /// Invalid method parameter(s).
     InvalidParams,
+
+    /// Internal MINI-RPC error.
     InternalError,
+
+    /// Reserved for implementation-defined server-errors.
     ServerError(i64),
 }
 
@@ -57,6 +72,7 @@ impl Serialize for Code {
     }
 }
 
+/// Error Object.
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Error {
     pub code: Code,
@@ -64,35 +80,42 @@ pub struct Error {
 }
 
 impl Error {
+    /// Creates a new `Error` for given `code`.
     pub fn new(code: Code) -> Self {
         let message = code.message().to_owned();
         Self { code, message }
     }
 
+    /// Creates a new `ParseError`.
     pub fn new_parse_error() -> Self {
         Self::new(Code::ParseError)
     }
 
+    /// Creates a new `ParseError`.
     pub fn new_invalid_request() -> Self {
         Self::new(Code::InvalidRequest)
     }
 
+    /// Creates a new `MethodNotFound`.
     pub fn new_method_not_found() -> Self {
         Self::new(Code::MethodNotFound)
     }
 
+    /// Creates a new `InvalidParams`.
     pub fn new_invalid_params() -> Self {
         Self::new(Code::InvalidParams)
     }
 
+    /// Creates a new `InternalError`.
     pub fn new_internal_error() -> Self {
         Self::new(Code::InternalError)
     }
 
+    /// Creates a new `ServerError` for given `code` and `message`.
     pub fn new_server_error(code: i64, message: &str) -> Self {
         Self {
             code: Code::ServerError(code),
-            message: message.to_owned()
+            message: message.to_owned(),
         }
     }
 }
@@ -149,7 +172,7 @@ mod tests {
         let result = Error::new(Code::ParseError);
         let expected = Error {
             code: Code::ParseError,
-            message: "Parse error".to_owned()
+            message: "Parse error".to_owned(),
         };
 
         assert_eq!(result, expected);
@@ -160,7 +183,7 @@ mod tests {
         let result = Error::new_parse_error();
         let expected = Error {
             code: Code::ParseError,
-            message: "Parse error".to_owned()
+            message: "Parse error".to_owned(),
         };
 
         assert_eq!(result, expected);
@@ -171,7 +194,7 @@ mod tests {
         let result = Error::new_invalid_request();
         let expected = Error {
             code: Code::InvalidRequest,
-            message: "Invalid request".to_owned()
+            message: "Invalid request".to_owned(),
         };
 
         assert_eq!(result, expected);
@@ -182,7 +205,7 @@ mod tests {
         let result = Error::new_method_not_found();
         let expected = Error {
             code: Code::MethodNotFound,
-            message: "Method not found".to_owned()
+            message: "Method not found".to_owned(),
         };
 
         assert_eq!(result, expected);
@@ -193,7 +216,7 @@ mod tests {
         let result = Error::new_invalid_params();
         let expected = Error {
             code: Code::InvalidParams,
-            message: "Invalid params".to_owned()
+            message: "Invalid params".to_owned(),
         };
 
         assert_eq!(result, expected);
@@ -204,7 +227,7 @@ mod tests {
         let result = Error::new_internal_error();
         let expected = Error {
             code: Code::InternalError,
-            message: "Internal error".to_owned()
+            message: "Internal error".to_owned(),
         };
 
         assert_eq!(result, expected);
@@ -215,7 +238,7 @@ mod tests {
         let result = Error::new_server_error(-32000, "Test error");
         let expected = Error {
             code: Code::ServerError(-32000),
-            message: "Test error".to_owned()
+            message: "Test error".to_owned(),
         };
 
         assert_eq!(result, expected);
