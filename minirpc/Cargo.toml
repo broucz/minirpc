@@ -8,8 +8,13 @@ documentation = "https://docs.rs/minirpc/"
 homepage = "https://github.com/broucz/minirpc"
 repository = "https://github.com/broucz/minirpc"
 keywords = ["rpc"]
+categories = ["asynchronous", "network-programming", "web-programming"]
 readme = "README.md"
 license = "MIT"
+
+[badges.travis-ci]
+repository = "broucz/minirpc"
+branch = "master"
 
 [dependencies]
 serde = "1.0.92"
