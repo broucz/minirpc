@@ -5,52 +5,55 @@ use crate::{Call, Notification};
 /// Request.
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
 #[serde(untagged)]
-pub enum Request {
+pub enum Request<M, P> {
     /// A batch of requests (payloads).
-    Batch(Vec<Payload>),
+    Batch(Vec<Payload<M, P>>),
 
     /// A single request (payload).
-    Single(Payload),
+    Single(Payload<M, P>),
 }
 
 /// Request payload.
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
 #[serde(untagged)]
-pub enum Payload {
+pub enum Payload<M, P> {
     /// Fire a notification.
-    Notification(Notification),
+    Notification(Notification<M, P>),
 
     /// Call a method.
-    Call(Call),
+    Call(Call<M, P>),
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{Call, Id, Method, Notification, Params};
-    use serde_json::{self, Value};
+    use crate::{Call, Notification};
+    use serde_json;
+
+    type M = String;
+    type P = Vec<u64>;
 
     #[test]
     fn request_deserialization() {
         // Single Notification.
         let input = r#"{"method":"test_method","params":[1,2,3]}"#;
         let expected = Request::Single(Payload::Notification(Notification {
-            method: Method::String("test_method".to_owned()),
-            params: Params::Array(vec![Value::from(1), Value::from(2), Value::from(3)]),
+            method: "test_method".to_owned(),
+            params: vec![1, 2, 3],
         }));
 
-        let result: Request = serde_json::from_str(input).unwrap();
+        let result: Request<M, P> = serde_json::from_str(input).unwrap();
         assert_eq!(result, expected);
 
         // Single Call.
         let input = r#"{"id":1,"method":"test_method","params":[1,2,3]}"#;
         let expected = Request::Single(Payload::Call(Call {
-            id: Id::Number(1),
-            method: Method::String("test_method".to_owned()),
-            params: Params::Array(vec![Value::from(1), Value::from(2), Value::from(3)]),
+            id: 1,
+            method: "test_method".to_owned(),
+            params: vec![1, 2, 3],
         }));
 
-        let result: Request = serde_json::from_str(input).unwrap();
+        let result: Request<M, P> = serde_json::from_str(input).unwrap();
         assert_eq!(result, expected);
 
         // Batch Notification and Call.
@@ -58,26 +61,26 @@ mod tests {
             r#"[{"method":"test_method","params":[1,2,3]},{"id":1,"method":"test_method","params":[1,2,3]}]"#;
         let expected = Request::Batch(vec![
             Payload::Notification(Notification {
-                method: Method::String("test_method".to_owned()),
-                params: Params::Array(vec![Value::from(1), Value::from(2), Value::from(3)]),
+                method: "test_method".to_owned(),
+                params: vec![1, 2, 3],
             }),
             Payload::Call(Call {
-                id: Id::Number(1),
-                method: Method::String("test_method".to_owned()),
-                params: Params::Array(vec![Value::from(1), Value::from(2), Value::from(3)]),
+                id: 1,
+                method: "test_method".to_owned(),
+                params: vec![1, 2, 3],
             }),
         ]);
 
-        let result: Request = serde_json::from_str(input).unwrap();
+        let result: Request<M, P> = serde_json::from_str(input).unwrap();
         assert_eq!(result, expected);
     }
 
     #[test]
     fn request_serialization() {
         // Single Notification.
-        let input = Request::Single(Payload::Notification(Notification {
-            method: Method::String("test_method".to_owned()),
-            params: Params::Array(vec![Value::from(1), Value::from(2), Value::from(3)]),
+        let input: Request<M, P> = Request::Single(Payload::Notification(Notification {
+            method: "test_method".to_owned(),
+            params: vec![1, 2, 3],
         }));
         let expected = r#"{"method":"test_method","params":[1,2,3]}"#;
 
@@ -86,9 +89,9 @@ mod tests {
 
         // Single Call.
         let input = Request::Single(Payload::Call(Call {
-            id: Id::Number(1),
-            method: Method::String("test_method".to_owned()),
-            params: Params::Array(vec![Value::from(1), Value::from(2), Value::from(3)]),
+            id: 1,
+            method: "test_method".to_owned(),
+            params: vec![1, 2, 3],
         }));
         let expected = r#"{"id":1,"method":"test_method","params":[1,2,3]}"#;
 
@@ -98,13 +101,13 @@ mod tests {
         // Batch Notification and Call.
         let input = Request::Batch(vec![
             Payload::Notification(Notification {
-                method: Method::String("test_method".to_owned()),
-                params: Params::Array(vec![Value::from(1), Value::from(2), Value::from(3)]),
+                method: "test_method".to_owned(),
+                params: vec![1, 2, 3],
             }),
             Payload::Call(Call {
-                id: Id::Number(1),
-                method: Method::String("test_method".to_owned()),
-                params: Params::Array(vec![Value::from(1), Value::from(2), Value::from(3)]),
+                id: 1,
+                method: "test_method".to_owned(),
+                params: vec![1, 2, 3],
             }),
         ]);
         let expected =

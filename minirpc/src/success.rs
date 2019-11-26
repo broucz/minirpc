@@ -1,40 +1,39 @@
 //! MINI-RPC Response Success.
 
-use crate::Id;
-use serde_json::Value;
-
 /// Response success.
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct Success {
+pub struct Success<R> {
     /// Correlation id.
-    pub id: Id,
+    pub id: u64,
 
     /// Result.
-    pub result: Value,
+    pub result: R,
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde_json::{self, Value};
+    use serde_json;
+
+    type R = bool;
 
     #[test]
     fn success_deserialization() {
         let input = r#"{"id":1,"result":true}"#;
         let expected = Success {
-            id: Id::Number(1),
-            result: Value::Bool(true),
+            id: 1,
+            result: true,
         };
 
-        let result: Success = serde_json::from_str(input).unwrap();
+        let result: Success<R> = serde_json::from_str(input).unwrap();
         assert_eq!(result, expected);
     }
 
     #[test]
     fn success_serialization() {
         let input = Success {
-            id: Id::Number(1),
-            result: Value::Bool(true),
+            id: 1,
+            result: true,
         };
         let expected = r#"{"id":1,"result":true}"#;
 

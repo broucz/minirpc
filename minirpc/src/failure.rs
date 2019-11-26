@@ -1,6 +1,6 @@
 //! MINI-RPC Response Failure.
 
-use crate::{Error, Id};
+use crate::Error;
 
 /// Response failure.
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -10,7 +10,7 @@ pub struct Failure {
 
     /// Correlation id.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub id: Option<Id>,
+    pub id: Option<u64>,
 }
 
 #[cfg(test)]
@@ -23,7 +23,7 @@ mod tests {
         let input = r#"{"error":{"code":-32700,"message":"Parse error"},"id":1}"#;
         let expected = Failure {
             error: Error::new_parse_error(),
-            id: Some(Id::Number(1)),
+            id: Some(1),
         };
 
         let result: Failure = serde_json::from_str(input).unwrap();
@@ -34,7 +34,7 @@ mod tests {
     fn failure_serialization() {
         let input = Failure {
             error: Error::new_parse_error(),
-            id: Some(Id::Number(1)),
+            id: Some(1),
         };
         let expected = r#"{"error":{"code":-32700,"message":"Parse error"},"id":1}"#;
 
